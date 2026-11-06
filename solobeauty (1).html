@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SoloBeauty — Makeup That Feels Like You</title>
+  <meta name="description" content="SoloBeauty — clean, inclusive, high-performance makeup." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --plum: #7F2549; --plum-deep: #5C1A35; --blush: #F8E8E0; --blush-soft: #FDF6F2;
+      --cream: #FDF8F5; --ink: #1A1215; --ink-soft: #4A3A40; --muted: #8A7A80;
+      --white: #FFFFFF; --border: #EDE4DF;
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-body: 'Inter', system-ui, sans-serif;
+      --section-pad: clamp(4rem, 10vw, 7rem);
+      --container: min(1200px, 92vw);
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-body); color: var(--ink); background: var(--cream); line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+    img { max-width: 100%; display: block; height: auto; }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; }
+    .container { width: var(--container); margin-inline: auto; }
+
+    .announce { background: var(--plum); color: #fff; text-align: center; padding: 0.65rem 1rem; font-size: 0.8rem; letter-spacing: 0.02em; }
+
+    .header { position: sticky; top: 0; z-index: 100; background: rgba(253,248,245,0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid transparent; transition: border-color 0.3s; }
+    .header.scrolled { border-bottom-color: var(--border); }
+    .nav-container { display: flex; align-items: center; justify-content: space-between; height: 72px; width: var(--container); margin-inline: auto; gap: 1.5rem; }
+    .logo { font-family: var(--font-display); font-size: 1.65rem; font-weight: 600; letter-spacing: -0.02em; }
+    .logo span { font-weight: 400; font-style: italic; color: var(--plum); }
+    .nav-left, .nav-right { display: flex; align-items: center; gap: 1.75rem; flex: 1; }
+    .nav-left { justify-content: flex-start; }
+    .nav-right { justify-content: flex-end; }
+    .nav-left a { font-size: 0.8rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft); transition: color 0.25s; }
+    .nav-left a:hover { color: var(--plum); }
+    .icon-btn { position: relative; color: var(--ink); display: flex; transition: color 0.25s, transform 0.25s; }
+    .icon-btn:hover { color: var(--plum); transform: scale(1.08); }
+    .cart-count { position: absolute; top: -6px; right: -8px; background: var(--plum); color: #fff; font-size: 0.65rem; font-weight: 600; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: transform 0.3s; }
+    .cart-count.pop { transform: scale(1.4); }
+    .menu-toggle { display: none; flex-direction: column; gap: 5px; width: 24px; }
+    .menu-toggle span { display: block; height: 1.5px; background: var(--ink); }
+    .mobile-menu { display: none; flex-direction: column; padding: 1rem 0 1.5rem; border-top: 1px solid var(--border); width: var(--container); margin-inline: auto; }
+    .mobile-menu a { padding: 0.85rem 0; font-size: 1rem; font-weight: 500; border-bottom: 1px solid var(--border); }
+    .mobile-menu.open { display: flex; }
+
+    .hero { position: relative; min-height: 92vh; display: flex; align-items: center; overflow: hidden; }
+    .hero-bg { position: absolute; inset: 0; z-index: 0; }
+    .hero-img { width: 100%; height: 100%; object-fit: cover; object-position: center 30%; transform: scale(1.05); animation: heroZoom 18s ease-in-out infinite alternate; }
+    @keyframes heroZoom { from { transform: scale(1.05); } to { transform: scale(1.12); } }
+    .hero-gradient { position: absolute; inset: 0; background: linear-gradient(105deg, rgba(253,248,245,0.94) 0%, rgba(253,248,245,0.78) 38%, rgba(253,248,245,0.3) 68%, transparent 100%); z-index: 1; }
+    .hero-content { position: relative; z-index: 2; width: var(--container); margin-inline: auto; max-width: 580px; padding: 2rem 0; }
+    .eyebrow { font-size: 0.75rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--plum); margin-bottom: 1rem; }
+    .hero h1 { font-family: var(--font-display); font-size: clamp(3rem, 7vw, 4.75rem); font-weight: 500; line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 1.25rem; }
+    .hero h1 em { font-style: italic; color: var(--plum); }
+    .hero-sub { font-size: 1.05rem; color: var(--ink-soft); max-width: 420px; margin-bottom: 2rem; font-weight: 300; line-height: 1.7; }
+    .hero-ctas { display: flex; flex-wrap: wrap; gap: 1rem; }
+    .scroll-indicator { position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 0.5rem; z-index: 2; opacity: 0.55; }
+    .scroll-indicator span { font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; }
+    .scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--ink), transparent); animation: scrollPulse 2s ease-in-out infinite; }
+    @keyframes scrollPulse { 0%,100% { opacity: 0.3; transform: scaleY(0.7); } 50% { opacity: 1; transform: scaleY(1); } }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.95rem 1.9rem; font-size: 0.8rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 100px; transition: all 0.35s var(--ease); }
+    .btn-primary { background: var(--plum); color: #fff; }
+    .btn-primary:hover { background: var(--plum-deep); transform: translateY(-3px); box-shadow: 0 10px 28px rgba(127,37,73,0.28); }
+    .btn-ghost { background: transparent; color: var(--ink); border: 1px solid var(--ink); }
+    .btn-ghost:hover { background: var(--ink); color: #fff; }
+    .btn-outline { background: transparent; color: var(--plum); border: 1.5px solid var(--plum); }
+    .btn-outline:hover { background: var(--plum); color: #fff; }
+
+    .marquee { background: var(--blush); padding: 1.15rem 0; overflow: hidden; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .marquee-track { display: flex; gap: 2.5rem; width: max-content; animation: marquee 26s linear infinite; font-family: var(--font-display); font-size: 1.15rem; font-weight: 500; color: var(--plum); }
+    .marquee-track span:nth-child(even) { color: var(--muted); font-size: 0.9rem; }
+    @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+    .section { padding: var(--section-pad) 0; }
+    .section-header { text-align: center; max-width: 560px; margin: 0 auto 3.5rem; }
+    .section-header h2 { font-family: var(--font-display); font-size: clamp(2.25rem, 5vw, 3.25rem); font-weight: 500; letter-spacing: -0.02em; margin-bottom: 0.75rem; }
+    .section-header.light h2 { color: #fff; }
+    .section-desc { color: var(--muted); font-size: 1rem; font-weight: 300; }
+    .section-cta { text-align: center; margin-top: 3rem; }
+
+    .product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.75rem; }
+    .product-media { position: relative; aspect-ratio: 3/4; overflow: hidden; background: var(--blush-soft); border-radius: 6px; margin-bottom: 1.1rem; }
+    .product-media img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s var(--ease-out); }
+    .product-card:hover .product-media img { transform: scale(1.08); }
+    .product-badge { position: absolute; top: 12px; left: 12px; background: var(--plum); color: #fff; font-size: 0.65rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; padding: 0.35rem 0.7rem; border-radius: 100px; z-index: 2; }
+    .product-badge.new { background: var(--ink); }
+    .product-overlay { position: absolute; inset: 0; background: rgba(26,18,21,0.28); display: flex; align-items: flex-end; justify-content: center; padding-bottom: 1.25rem; opacity: 0; transition: opacity 0.4s; }
+    .product-card:hover .product-overlay { opacity: 1; }
+    .quick-add { background: #fff; color: var(--ink); padding: 0.75rem 1.5rem; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 100px; transform: translateY(16px); transition: transform 0.4s, background 0.25s, color 0.25s; }
+    .product-card:hover .quick-add { transform: translateY(0); }
+    .quick-add:hover { background: var(--plum); color: #fff; }
+    .product-info h3 { font-family: var(--font-display); font-size: 1.2rem; font-weight: 500; margin-bottom: 0.25rem; }
+    .product-desc { font-size: 0.85rem; color: var(--muted); margin-bottom: 0.75rem; font-weight: 300; }
+    .product-meta { display: flex; align-items: center; justify-content: space-between; }
+    .price { font-size: 0.9rem; font-weight: 500; }
+    .swatches { display: flex; gap: 5px; }
+    .swatches span { width: 14px; height: 14px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.08); transition: transform 0.25s; }
+    .product-card:hover .swatches span { transform: scale(1.15); }
+
+    .categories { background: var(--plum-deep); color: #fff; }
+    .category-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
+    .category-card { position: relative; aspect-ratio: 3/4; overflow: hidden; border-radius: 6px; display: block; }
+    .category-img { position: absolute; inset: 0; }
+    .category-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.9s var(--ease-out); }
+    .category-card:hover .category-img img { transform: scale(1.1); }
+    .category-content { position: absolute; inset: 0; background: linear-gradient(to top, rgba(26,18,21,0.78) 0%, transparent 55%); display: flex; flex-direction: column; justify-content: flex-end; padding: 1.5rem; color: #fff; }
+    .category-content h3 { font-family: var(--font-display); font-size: 1.75rem; font-weight: 500; margin-bottom: 0.25rem; transition: transform 0.35s; }
+    .category-card:hover .category-content h3 { transform: translateY(-4px); }
+    .category-content span { font-size: 0.8rem; letter-spacing: 0.06em; text-transform: uppercase; opacity: 0.85; transition: opacity 0.25s, transform 0.35s; }
+    .category-card:hover .category-content span { opacity: 1; transform: translateX(4px); }
+
+    .spotlight { background: var(--blush-soft); }
+    .spotlight-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 4rem; align-items: center; }
+    .spotlight-media { position: relative; border-radius: 8px; overflow: hidden; }
+    .spotlight-media img { width: 100%; aspect-ratio: 4/5; object-fit: cover; transition: transform 1s var(--ease-out); }
+    .spotlight-media:hover img { transform: scale(1.04); }
+    .spotlight-badge { position: absolute; bottom: 1.5rem; left: 1.5rem; background: #fff; padding: 0.85rem 1.25rem; border-radius: 6px; display: flex; flex-direction: column; gap: 0.15rem; box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+    .spotlight-badge span { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--plum); font-weight: 500; }
+    .spotlight-badge strong { font-family: var(--font-display); font-size: 1.15rem; font-weight: 500; }
+    .spotlight-content h2 { font-family: var(--font-display); font-size: clamp(2.25rem, 4.5vw, 3.25rem); font-weight: 500; line-height: 1.1; margin-bottom: 1.25rem; letter-spacing: -0.02em; }
+    .spotlight-content p { color: var(--ink-soft); margin-bottom: 1.5rem; font-weight: 300; line-height: 1.7; }
+    .feature-list { list-style: none; margin-bottom: 2rem; }
+    .feature-list li { position: relative; padding-left: 1.35rem; margin-bottom: 0.6rem; font-size: 0.95rem; color: var(--ink-soft); }
+    .feature-list li::before { content: ''; position: absolute; left: 0; top: 0.55em; width: 6px; height: 6px; border-radius: 50%; background: var(--plum); }
+
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+    .about-content h2 { font-family: var(--font-display); font-size: clamp(2.25rem, 4.5vw, 3.25rem); font-weight: 500; margin-bottom: 1.25rem; letter-spacing: -0.02em; }
+    .about-content .lead { font-size: 1.15rem; margin-bottom: 1rem; line-height: 1.6; }
+    .about-content p { color: var(--ink-soft); font-weight: 300; margin-bottom: 2rem; line-height: 1.75; }
+    .values { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
+    .value { display: flex; flex-direction: column; gap: 0.25rem; }
+    .value strong { font-family: var(--font-display); font-size: 1.25rem; font-weight: 500; color: var(--plum); }
+    .value span { font-size: 0.85rem; color: var(--muted); }
+    .about-media { border-radius: 8px; overflow: hidden; }
+    .about-media img { width: 100%; aspect-ratio: 4/5; object-fit: cover; transition: transform 1s var(--ease-out); }
+    .about-media:hover img { transform: scale(1.04); }
+
+    .ugc-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.75rem; }
+    .ugc-item { aspect-ratio: 1; overflow: hidden; border-radius: 6px; }
+    .ugc-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s var(--ease-out); }
+    .ugc-item:hover img { transform: scale(1.1); }
+
+    .newsletter { background: var(--blush); }
+    .newsletter-inner { display: flex; align-items: center; justify-content: space-between; gap: 3rem; flex-wrap: wrap; }
+    .newsletter-content h2 { font-family: var(--font-display); font-size: clamp(1.75rem, 3.5vw, 2.5rem); font-weight: 500; margin-bottom: 0.5rem; }
+    .newsletter-content p { color: var(--ink-soft); font-weight: 300; max-width: 360px; }
+    .newsletter-form { display: flex; gap: 0.75rem; flex: 1; max-width: 480px; }
+    .newsletter-form input { flex: 1; padding: 0.95rem 1.35rem; border: 1.5px solid var(--border); border-radius: 100px; background: #fff; font-size: 0.95rem; font-family: inherit; outline: none; transition: border-color 0.25s, box-shadow 0.25s; }
+    .newsletter-form input:focus { border-color: var(--plum); box-shadow: 0 0 0 3px rgba(127,37,73,0.12); }
+    .newsletter-form input::placeholder { color: var(--muted); }
+
+    .footer { background: var(--ink); color: rgba(255,255,255,0.75); padding: 4.5rem 0 2rem; }
+    .footer-grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 3.5rem; }
+    .footer-brand .logo { color: #fff; display: inline-block; margin-bottom: 1rem; }
+    .footer-brand p { font-size: 0.9rem; font-weight: 300; line-height: 1.7; max-width: 280px; margin-bottom: 1.5rem; }
+    .socials { display: flex; gap: 1.25rem; }
+    .socials a { font-size: 0.8rem; font-weight: 500; color: rgba(255,255,255,0.6); transition: color 0.25s; }
+    .socials a:hover { color: #fff; }
+    .footer-links h4 { font-family: var(--font-display); font-size: 1.1rem; font-weight: 500; color: #fff; margin-bottom: 1.15rem; }
+    .footer-links a { display: block; font-size: 0.9rem; font-weight: 300; margin-bottom: 0.6rem; color: rgba(255,255,255,0.6); transition: color 0.25s; }
+    .footer-links a:hover { color: #fff; }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.8rem; color: rgba(255,255,255,0.45); }
+    .footer-legal { display: flex; gap: 1.5rem; }
+    .footer-legal a:hover { color: #fff; }
+
+    /* Animations */
+    .fade-up { opacity: 0; transform: translateY(32px); animation: fadeUp 1s var(--ease-out) forwards; }
+    .delay-1 { animation-delay: 0.18s; }
+    .delay-2 { animation-delay: 0.34s; }
+    .delay-3 { animation-delay: 0.5s; }
+    @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+
+    [data-aos] { opacity: 0; transform: translateY(40px); transition: opacity 0.9s var(--ease-out), transform 0.9s var(--ease-out); }
+    [data-aos].in-view { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 1024px) {
+      .product-grid { grid-template-columns: repeat(2, 1fr); }
+      .category-grid { grid-template-columns: repeat(2, 1fr); }
+      .ugc-grid { grid-template-columns: repeat(3, 1fr); }
+      .spotlight-grid, .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .spotlight-media { order: -1; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 2.5rem; }
+    }
+    @media (max-width: 768px) {
+      .nav-left { display: none; }
+      .menu-toggle { display: flex; }
+      .nav-container { height: 64px; }
+      .hero { min-height: 85vh; }
+      .hero-gradient { background: linear-gradient(to bottom, rgba(253,248,245,0.92) 0%, rgba(253,248,245,0.72) 50%, rgba(253,248,245,0.4) 100%); }
+      .hero-content { text-align: center; max-width: 100%; }
+      .hero-sub { margin-inline: auto; }
+      .hero-ctas { justify-content: center; }
+      .scroll-indicator { display: none; }
+      .product-grid { grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+      .values { grid-template-columns: 1fr; gap: 1rem; }
+      .newsletter-inner { flex-direction: column; text-align: center; }
+      .newsletter-content p { margin-inline: auto; }
+      .newsletter-form { width: 100%; max-width: 100%; flex-direction: column; }
+      .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; }
+    }
+    @media (max-width: 480px) {
+      .product-grid { grid-template-columns: 1fr; }
+      .category-grid { grid-template-columns: 1fr; }
+      .ugc-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <div class="announce"><p>Free shipping on orders over Rs. 3,500 · New Soft Pinch Blush shades just dropped</p></div>
+
+  <header class="header" id="header">
+    <div class="nav-container">
+      <button class="menu-toggle" id="menuToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+      <nav class="nav-left">
+        <a href="#shop">Shop</a>
+        <a href="#bestsellers">Bestsellers</a>
+        <a href="#about">Our Story</a>
+      </nav>
+      <a href="#" class="logo">Solo<span>Beauty</span></a>
+      <div class="nav-right">
+        <a href="#search" class="icon-btn" aria-label="Search"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></a>
+        <a href="#account" class="icon-btn" aria-label="Account"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></a>
+        <a href="#cart" class="icon-btn" aria-label="Cart"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M6 6L5 3H2"/></svg><span class="cart-count">0</span></a>
+      </div>
+    </div>
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#shop">Shop All</a><a href="#bestsellers">Bestsellers</a><a href="#categories">Categories</a><a href="#about">Our Story</a><a href="#community">Community</a>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-bg">
+      <div class="hero-gradient"></div>
+      <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=1600&q=80" alt="Beauty products" class="hero-img" />
+    </div>
+    <div class="hero-content">
+      <p class="eyebrow fade-up">New Collection</p>
+      <h1 class="fade-up delay-1">Beauty that<br/>feels like <em>you</em></h1>
+      <p class="hero-sub fade-up delay-2">Clean formulas. Soft textures. Shades made for every skin tone. Experience makeup that celebrates your unique beauty.</p>
+      <div class="hero-ctas fade-up delay-3">
+        <a href="#bestsellers" class="btn btn-primary">Shop Bestsellers</a>
+        <a href="#about" class="btn btn-ghost">Our Philosophy</a>
+      </div>
+    </div>
+    <div class="scroll-indicator"><span>Scroll</span><div class="scroll-line"></div></div>
+  </section>
+
+  <div class="marquee">
+    <div class="marquee-track">
+      <span>Soft Pinch Liquid Blush</span><span>•</span><span>Lip Soufflé Matte</span><span>•</span><span>Positive Light Highlighter</span><span>•</span><span>Kind Words Lipstick</span><span>•</span><span>Perfect Strokes Mascara</span><span>•</span>
+      <span>Soft Pinch Liquid Blush</span><span>•</span><span>Lip Soufflé Matte</span><span>•</span><span>Positive Light Highlighter</span><span>•</span><span>Kind Words Lipstick</span><span>•</span><span>Perfect Strokes Mascara</span><span>•</span>
+    </div>
+  </div>
+
+  <section class="section bestsellers" id="bestsellers">
+    <div class="container">
+      <div class="section-header">
+        <p class="eyebrow">Most Loved</p>
+        <h2>Bestsellers</h2>
+        <p class="section-desc">The products everyone is talking about — soft, buildable, and designed to enhance your natural beauty.</p>
+      </div>
+      <div class="product-grid">
+        <article class="product-card" data-aos>
+          <div class="product-media">
+            <div class="product-badge">Bestseller</div>
+            <img src="https://images.unsplash.com/photo-1631214540553-ff044a3ff1d4?auto=format&fit=crop&w=600&q=80" alt="Soft Pinch Liquid Blush" loading="lazy" />
+            <div class="product-overlay"><button class="quick-add">Quick Add</button></div>
+          </div>
+          <div class="product-info">
+            <h3>Soft Pinch Liquid Blush</h3>
+            <p class="product-desc">Weightless, buildable color that lasts all day</p>
+            <div class="product-meta"><span class="price">Rs. 2,850</span><div class="swatches"><span style="background:#E8A0A0"></span><span style="background:#C97B84"></span><span style="background:#9B4B5A"></span></div></div>
+          </div>
+        </article>
+        <article class="product-card" data-aos>
+          <div class="product-media">
+            <img src="https://images.unsplash.com/photo-1631730486572-226d1f595b68?auto=format&fit=crop&w=600&q=80" alt="Lip Soufflé" loading="lazy" />
+            <div class="product-overlay"><button class="quick-add">Quick Add</button></div>
+          </div>
+          <div class="product-info">
+            <h3>Lip Soufflé Matte Cream</h3>
+            <p class="product-desc">Airy matte finish with a soft, cushiony feel</p>
+            <div class="product-meta"><span class="price">Rs. 2,450</span><div class="swatches"><span style="background:#C45C5C"></span><span style="background:#8B3A3A"></span><span style="background:#D4A5A5"></span></div></div>
+          </div>
+        </article>
+        <article class="product-card" data-aos>
+          <div class="product-media">
+            <div class="product-badge new">New</div>
+            <img src="https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?auto=format&fit=crop&w=600&q=80" alt="Highlighter" loading="lazy" />
+            <div class="product-overlay"><button class="quick-add">Quick Add</button></div>
+          </div>
+          <div class="product-info">
+            <h3>Positive Light Highlighter</h3>
+            <p class="product-desc">Silky, luminous glow that never looks glittery</p>
+            <div class="product-meta"><span class="price">Rs. 3,150</span><div class="swatches"><span style="background:#F5E6D3"></span><span style="background:#E8D4C4"></span><span style="background:#D4B8A0"></span></div></div>
+          </div>
+        </article>
+        <article class="product-card" data-aos>
+          <div class="product-media">
+            <img src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=600&q=80" alt="Lipstick" loading="lazy" />
+            <div class="product-overlay"><button class="quick-add">Quick Add</button></div>
+          </div>
+          <div class="product-info">
+            <h3>Kind Words Matte Lipstick</h3>
+            <p class="product-desc">Comfortable matte with a smooth, creamy glide</p>
+            <div class="product-meta"><span class="price">Rs. 2,650</span><div class="swatches"><span style="background:#B85C5C"></span><span style="background:#8B4557"></span><span style="background:#5C2E3A"></span></div></div>
+          </div>
+        </article>
+      </div>
+      <div class="section-cta"><a href="#shop" class="btn btn-outline">View All Products</a></div>
+    </div>
+  </section>
+
+  <section class="section categories" id="categories">
+    <div class="container">
+      <div class="section-header light">
+        <p class="eyebrow" style="color:rgba(255,255,255,0.7)">Explore</p>
+        <h2>Shop by Category</h2>
+      </div>
+      <div class="category-grid">
+        <a href="#lips" class="category-card" data-aos>
+          <div class="category-img"><img src="https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?auto=format&fit=crop&w=800&q=80" alt="Lips" loading="lazy" /></div>
+          <div class="category-content"><h3>Lips</h3><span>Shop Now →</span></div>
+        </a>
+        <a href="#cheeks" class="category-card" data-aos>
+          <div class="category-img"><img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=800&q=80" alt="Cheeks" loading="lazy" /></div>
+          <div class="category-content"><h3>Cheeks</h3><span>Shop Now →</span></div>
+        </a>
+        <a href="#face" class="category-card" data-aos>
+          <div class="category-img"><img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=800&q=80" alt="Face" loading="lazy" /></div>
+          <div class="category-content"><h3>Face</h3><span>Shop Now →</span></div>
+        </a>
+        <a href="#eyes" class="category-card" data-aos>
+          <div class="category-img"><img src="https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?auto=format&fit=crop&w=800&q=80" alt="Eyes" loading="lazy" /></div>
+          <div class="category-content"><h3>Eyes</h3><span>Shop Now →</span></div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section spotlight">
+    <div class="container spotlight-grid">
+      <div class="spotlight-media" data-aos>
+        <img src="https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=900&q=80" alt="Soft Pinch" />
+        <div class="spotlight-badge"><span>Limited</span><strong>Soft Pinch Collection</strong></div>
+      </div>
+      <div class="spotlight-content" data-aos>
+        <p class="eyebrow">Featured</p>
+        <h2>One dot.<br/>Endless glow.</h2>
+        <p>Our award-winning Soft Pinch Liquid Blush delivers the perfect flush with just one touch. Lightweight, long-wearing, and made to look like your natural flush — only better.</p>
+        <ul class="feature-list">
+          <li>Buildable, blendable formula</li>
+          <li>12-hour wear</li>
+          <li>Available in 12 inclusive shades</li>
+          <li>Vegan & cruelty-free</li>
+        </ul>
+        <a href="#bestsellers" class="btn btn-primary">Shop Soft Pinch</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section about" id="about">
+    <div class="container about-grid">
+      <div class="about-content" data-aos>
+        <p class="eyebrow">Our Philosophy</p>
+        <h2>Beauty without filters</h2>
+        <p class="lead">SoloBeauty was created for the moments when you want to feel like the best version of yourself — not a different person.</p>
+        <p>We believe makeup should enhance, never mask. Our formulas are soft, breathable, and designed to work with your skin, not against it.</p>
+        <div class="values">
+          <div class="value"><strong>Clean</strong><span>Thoughtfully formulated</span></div>
+          <div class="value"><strong>Inclusive</strong><span>Shades for every tone</span></div>
+          <div class="value"><strong>Kind</strong><span>Vegan & cruelty-free</span></div>
+        </div>
+      </div>
+      <div class="about-media" data-aos>
+        <img src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=800&q=80" alt="Portrait" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section community" id="community">
+    <div class="container">
+      <div class="section-header">
+        <p class="eyebrow">@solobeauty</p>
+        <h2>Real skin. Real beauty.</h2>
+        <p class="section-desc">Tag us in your #SoloRoutine for a chance to be featured.</p>
+      </div>
+      <div class="ugc-grid">
+        <div class="ugc-item" data-aos><img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=500&q=80" alt="" loading="lazy" /></div>
+        <div class="ugc-item" data-aos><img src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=500&q=80" alt="" loading="lazy" /></div>
+        <div class="ugc-item" data-aos><img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=500&q=80" alt="" loading="lazy" /></div>
+        <div class="ugc-item" data-aos><img src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=500&q=80" alt="" loading="lazy" /></div>
+        <div class="ugc-item" data-aos><img src="https://images.unsplash.com/photo-1631730486572-226d1f595b68?auto=format&fit=crop&w=500&q=80" alt="" loading="lazy" /></div>
+        <div class="ugc-item" data-aos><img src="https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?auto=format&fit=crop&w=500&q=80" alt="" loading="lazy" /></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section newsletter">
+    <div class="container newsletter-inner">
+      <div class="newsletter-content" data-aos>
+        <h2>Stay in the glow</h2>
+        <p>Be the first to know about new shades, exclusive offers, and beauty tips from SoloBeauty.</p>
+      </div>
+      <form class="newsletter-form" data-aos>
+        <input type="email" placeholder="Enter your email" required />
+        <button type="submit" class="btn btn-primary">Subscribe</button>
+      </form>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="#" class="logo">Solo<span>Beauty</span></a>
+          <p>Makeup that feels like you. Clean, inclusive, and made to celebrate every shade of beauty.</p>
+          <div class="socials"><a href="#">IG</a><a href="#">TT</a><a href="#">YT</a></div>
+        </div>
+        <div class="footer-links"><h4>Shop</h4><a href="#">Lips</a><a href="#">Cheeks</a><a href="#">Face</a><a href="#">Eyes</a><a href="#">Bestsellers</a></div>
+        <div class="footer-links"><h4>About</h4><a href="#">Our Story</a><a href="#">Ingredients</a><a href="#">Sustainability</a><a href="#">Careers</a></div>
+        <div class="footer-links"><h4>Help</h4><a href="#">Contact</a><a href="#">Shipping</a><a href="#">Returns</a><a href="#">FAQ</a></div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 SoloBeauty. All rights reserved.</p>
+        <div class="footer-legal"><a href="#">Privacy</a><a href="#">Terms</a></div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var header = document.getElementById('header');
+      window.addEventListener('scroll', function () {
+        header.classList.toggle('scrolled', window.scrollY > 40);
+      }, { passive: true });
+
+      var menuToggle = document.getElementById('menuToggle');
+      var mobileMenu = document.getElementById('mobileMenu');
+      if (menuToggle && mobileMenu) {
+        menuToggle.addEventListener('click', function () {
+          mobileMenu.classList.toggle('open');
+        });
+        mobileMenu.querySelectorAll('a').forEach(function (link) {
+          link.addEventListener('click', function () { mobileMenu.classList.remove('open'); });
+        });
+      }
+
+      // Scroll reveal — force check on load too
+      var aosEls = document.querySelectorAll('[data-aos]');
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) entry.target.classList.add('in-view');
+        });
+      }, { threshold: 0.08, rootMargin: '0px 0px -20px 0px' });
+      aosEls.forEach(function (el) { observer.observe(el); });
+
+      // Also reveal anything already in view on load
+      setTimeout(function () {
+        aosEls.forEach(function (el) {
+          var rect = el.getBoundingClientRect();
+          if (rect.top < window.innerHeight * 0.9) el.classList.add('in-view');
+        });
+      }, 100);
+
+      document.querySelectorAll('.product-card[data-aos]').forEach(function (card, i) {
+        card.style.transitionDelay = (i * 0.1) + 's';
+      });
+      document.querySelectorAll('.category-card[data-aos]').forEach(function (card, i) {
+        card.style.transitionDelay = (i * 0.12) + 's';
+      });
+      document.querySelectorAll('.ugc-item[data-aos]').forEach(function (item, i) {
+        item.style.transitionDelay = (i * 0.07) + 's';
+      });
+
+      document.querySelectorAll('.quick-add').forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          var original = btn.textContent;
+          btn.textContent = 'Added ✓';
+          btn.style.background = 'var(--plum)';
+          btn.style.color = 'white';
+          var cart = document.querySelector('.cart-count');
+          if (cart) {
+            cart.textContent = parseInt(cart.textContent || '0', 10) + 1;
+            cart.classList.add('pop');
+            setTimeout(function () { cart.classList.remove('pop'); }, 350);
+          }
+          setTimeout(function () {
+            btn.textContent = original;
+            btn.style.background = '';
+            btn.style.color = '';
+          }, 1500);
+        });
+      });
+
+      var form = document.querySelector('.newsletter-form');
+      if (form) {
+        form.addEventListener('submit', function (e) {
+          e.preventDefault();
+          var input = form.querySelector('input');
+          var btn = form.querySelector('button');
+          var t = btn.textContent;
+          btn.textContent = 'Thank you!';
+          btn.style.pointerEvents = 'none';
+          input.value = '';
+          input.placeholder = "You're on the list ✨";
+          setTimeout(function () {
+            btn.textContent = t;
+            btn.style.pointerEvents = '';
+            input.placeholder = 'Enter your email';
+          }, 2600);
+        });
+      }
+    });
+  </script>
+</body>
+</html>
